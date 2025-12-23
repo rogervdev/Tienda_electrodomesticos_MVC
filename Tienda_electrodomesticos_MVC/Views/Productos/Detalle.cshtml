@@ -1,0 +1,24 @@
+﻿@model Tienda_electrodomesticos_MVC.Models.Producto
+
+<div class="row">
+    <div class="col-md-5">
+        <img src="https://localhost:7008/images/productos/@Model.Imagen"
+             class="img-fluid" />
+    </div>
+
+    <div class="col-md-7">
+        <h2>@Model.Titulo</h2>
+        <p>@Model.Descripcion</p>
+
+        <h4>S/. @(Model.PrecioConDescuento ?? Model.Precio)</h4>
+
+        <form asp-controller="Carrito" asp-action="Agregar" method="post">
+            <input type="hidden" name="productoId" value="@Model.Id" />
+            <input type="hidden" name="usuarioId" value="1" />
+
+            <button class="btn btn-success">
+                🛒 Agregar al carrito
+            </button>
+        </form>
+    </div>
+</div>

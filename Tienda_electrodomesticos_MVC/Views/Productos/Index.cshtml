@@ -1,0 +1,42 @@
+﻿@model List<Tienda_electrodomesticos_MVC.Models.Producto>
+
+<h2 class="mb-4">Productos</h2>
+
+<div class="row">
+    @foreach (var p in Model)
+    {
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                <img src="https://localhost:7008/images/productos/@p.Imagen"
+                     class="card-img-top"
+                     alt="@p.Titulo" />
+
+                <div class="card-body">
+                    <h5>@p.Titulo</h5>
+
+                    @if (p.PrecioConDescuento != null)
+                    {
+                        <p>
+                            <span class="text-muted text-decoration-line-through">
+                                S/. @p.Precio
+                            </span>
+                            <strong class="text-danger">
+                                S/. @p.PrecioConDescuento
+                            </strong>
+                        </p>
+                    }
+                    else
+                    {
+                        <p><strong>S/. @p.Precio</strong></p>
+                    }
+
+                    <a asp-action="Detalle"
+                       asp-route-id="@p.Id"
+                       class="btn btn-primary btn-sm">
+                        Ver detalle
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
