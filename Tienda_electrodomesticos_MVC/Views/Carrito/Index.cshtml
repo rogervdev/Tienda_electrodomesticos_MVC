@@ -1,0 +1,25 @@
+﻿@model List<Tienda_electrodomesticos_MVC.Models.Carrito>
+
+<h2>Mi carrito</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Producto?.Titulo</td>
+                <td>@item.Cantidad</td>
+                <td>S/. @item.PrecioTotal</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Total: S/. @Model.Sum(x => x.PrecioTotal)</h4>

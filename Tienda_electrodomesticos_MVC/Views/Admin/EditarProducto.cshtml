@@ -1,0 +1,149 @@
+﻿@model Tienda_electrodomesticos_MVC.Models.ViewModels.ProductoViewModel
+@inject IConfiguration Configuration
+@{
+    var api = Configuration["ApiBaseUrl"];
+}
+@{
+    ViewData["Title"] = "Editar Producto";
+}
+
+<section>
+    <div class="container py-5 mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card card-sh border-0 rounded-4">
+
+                    <!-- Header -->
+                    <div class="card-header bg-primary text-white text-center py-3 rounded-top">
+                        <h4 class="mb-0 fw-semibold">
+                            <i class="fa-solid fa-square-plus me-2"></i>Editar Producto
+                        </h4>
+
+                        <!-- Mensajes -->
+                        @if (TempData["successMsg"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show mt-3 mb-0" role="alert">
+                                <strong>@TempData["successMsg"]</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                            </div>
+                        }
+                        @if (TempData["errorMsg"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show mt-3 mb-0" role="alert">
+                                <strong>@TempData["errorMsg"]</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="card-body p-4">
+                        <form asp-action="ActualizarProducto" asp-controller="Admin" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="Id" value="@Model.Id" />
+
+                            <!-- Título -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Título</label>
+                                <input type="text" name="Titulo" class="form-control" value="@Model.Titulo" required />
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Descripción</label>
+                                <textarea rows="3" name="Descripcion" class="form-control" required>@Model.Descripcion</textarea>
+                            </div>
+
+                            <!-- Categoría -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Categoría</label>
+                                <select class="form-select" name="CategoriaId" required>
+                                    @foreach (var c in Model.Categorias)
+                                    {
+                                        if (c.Id == Model.CategoriaId)
+                                        {
+                                            <option value="@c.Id" selected>@c.Nombre</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@c.Id">@c.Nombre</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+
+
+                            <!-- Estado -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold d-block mb-2">Estado</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="IsActive" value="true" @(Model.IsActive ? "checked" : "") id="activo"/>
+                                    <label class="form-check-label" for="activo">Activo</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="IsActive" value="false" @(!Model.IsActive ? "checked" : "") id="inactivo"/>
+                                    <label class="form-check-label" for="inactivo">Inactivo</label>
+                                </div>
+                            </div>
+
+                            <!-- Precio, Descuento y Precio con descuento -->
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold">Precio (S/)</label>
+                                    <input type="number" name="Precio" class="form-control" value="@Model.Precio" step="0.01" required />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold">Descuento %</label>
+                                    <input type="number" name="Descuento" class="form-control" value="@Model.Descuento" step="1"/>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold">Precio con descuento</label>
+                                    <input type="number" name="PrecioConDescuento" class="form-control" value="@Model.PrecioConDescuento" step="0.01" readonly/>
+                                </div>
+                            </div>
+
+                            <!-- Stock -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Stock</label>
+                                <input type="number" name="Stock" class="form-control" value="@Model.Stock" required />
+                            </div>
+
+                            <!-- Imagen -->
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Imagen del producto</label>
+
+                                <!-- 👇 GUARDA LA IMAGEN ACTUAL -->
+                                <input type="hidden" name="Imagen" value="@Model.Imagen" />
+
+                                <input type="file" name="File" class="form-control" accept="image/*" />
+                                <small class="text-muted">
+                                    Si no seleccionas una nueva imagen, se mantendrá la actual.
+                                </small>
+                            </div>
+
+                            <div class="mb-4 text-center">
+                                <img src="@($"{api}/images/productos/{Model.Imagen}")"
+                                     class="rounded-circle border"
+                                     style="width:50px;height:50px;object-fit:cover" />
+                            </div>
+
+
+                            <!-- Botones -->
+                            <div class="d-flex justify-content-between gap-2">
+                                <a asp-controller="Admin" asp-action="Index" class="btn btn-secondary flex-grow-1">
+                                    <i class="fa-solid fa-arrow-left me-2"></i> Regresar
+                                </a>
+                                <a asp-controller="Admin" asp-action="Productos" class="btn btn-info flex-grow-1">
+                                    <i class="fa-solid fa-eye me-2"></i> Ver Productos
+                                </a>
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="fa-solid fa-circle-check me-2"></i> Guardar Producto
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

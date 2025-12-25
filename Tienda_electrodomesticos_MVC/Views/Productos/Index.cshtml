@@ -1,42 +1,126 @@
-﻿@model List<Tienda_electrodomesticos_MVC.Models.Producto>
+﻿@model Tienda_electrodomesticos_MVC.Models.ViewModels.ProductosViewModel
+@inject IConfiguration Configuration
 
-<h2 class="mb-4">Productos</h2>
+@{
+    ViewData["Title"] = "Productos";
+    var api = Configuration["ApiBaseUrl"];
+    var categoria = ViewData["CategoriaSeleccionada"] as string ?? "";
+}
 
-<div class="row">
-    @foreach (var p in Model)
-    {
-        <div class="col-md-3 mb-4">
-            <div class="card h-100">
-                <img src="https://localhost:7008/images/productos/@p.Imagen"
-                     class="card-img-top"
-                     alt="@p.Titulo" />
-
-                <div class="card-body">
-                    <h5>@p.Titulo</h5>
-
-                    @if (p.PrecioConDescuento != null)
-                    {
-                        <p>
-                            <span class="text-muted text-decoration-line-through">
-                                S/. @p.Precio
-                            </span>
-                            <strong class="text-danger">
-                                S/. @p.PrecioConDescuento
-                            </strong>
-                        </p>
-                    }
-                    else
-                    {
-                        <p><strong>S/. @p.Precio</strong></p>
-                    }
-
-                    <a asp-action="Detalle"
-                       asp-route-id="@p.Id"
-                       class="btn btn-primary btn-sm">
-                        Ver detalle
-                    </a>
-                </div>
+<section class="py-5">
+    <!-- 🔍 Barra de búsqueda -->
+    <div class="container-fluid bg-primary py-4 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-10 col-md-8 col-lg-6">
+                <form asp-action="Index" method="get">
+                    <div class="input-group input-group-lg shadow-sm">
+                        <input type="text" name="filtro" class="form-control"
+                               placeholder="Buscar productos..." aria-label="Buscar productos" />
+                        <button class="btn btn-light fw-semibold text-primary" type="submit">
+                            <i class="fa-solid fa-magnifying-glass me-2"></i> Buscar
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-    }
-</div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row g-4">
+            <!-- Categorías -->
+            <div class="col-12 col-md-3 col-lg-2">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-primary text-white text-center fw-semibold py-3">
+                        <i class="fa-solid fa-tags me-2"></i> Categorías
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a asp-action="Index" class="list-group-item list-group-item-action text-center fw-semibold text-primary">
+                            <i class="fa-solid fa-layer-group me-1"></i> Todo
+                        </a>
+
+                        @{
+                            var categoriasLista = ViewBag.Categorias as List<Categoria> ?? new List<Categoria>();
+                        }
+
+                        @foreach (var c in categoriasLista)
+                        {
+                            bool esSeleccionada = categoria == c.Nombre;
+                            var estilo = esSeleccionada ? "font-weight:bold; color:white;" : "";
+                            <a asp-action="Index" asp-route-categoria="@c.Nombre"
+                               class="list-group-item list-group-item-action text-center @(esSeleccionada ? "active" : "")"
+                               style="@estilo">
+                                @c.Nombre
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Productos -->
+            <div class="col-12 col-md-9 col-lg-10">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 text-center py-3">
+                        <h3 class="fw-bold text-primary mb-0">
+                            <i class="fa-solid fa-box-open me-2 text-secondary"></i>
+                            @Model.CategoriaSeleccionada
+                        </h3>
+
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row g-4 justify-content-center">
+                            @if (Model.Productos != null && Model.Productos.Count > 0)
+                            {
+                                @foreach (var p in Model.Productos)
+                                {
+                                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                                        <div class="card h-100 border-0 shadow-sm">
+                                            <div class="position-relative">
+                                                <img src="@($"{api}/images/productos/{p.Imagen}")"
+                                                     class="card-img-top img-fluid rounded-top"
+                                                     alt="@p.Titulo" />
+                                                @if (p.Descuento > 0)
+                                                {
+                                                    <span class="badge bg-success position-absolute top-0 end-0 m-2">
+                                                        -@p.Descuento%
+                                                    </span>
+                                                }
+                                            </div>
+                                            <div class="card-body text-center">
+                                                <h6 class="card-title fw-semibold text-truncate">@p.Titulo</h6>
+                                                <p class="mb-2">
+                                                    @if (p.Descuento > 0)
+                                                    {
+                                                        <span class="text-muted text-decoration-line-through small">
+                                                            s/@p.Precio
+                                                        </span>
+                                                        <br />
+                                                    }
+                                                    <span class="fw-bold text-success fs-5">
+                                                        s/@p.PrecioConDescuento
+                                                    </span>
+                                                </p>
+                                                <a asp-action="Detalle" asp-route-id="@p.Id"
+                                                   class="btn btn-outline-primary w-100 fw-semibold">
+                                                    <i class="fa-solid fa-eye me-1"></i> Ver detalles
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="alert alert-info text-center" role="alert">
+                                    No se encontraron productos.
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin Productos -->
+        </div>
+    </div>
+</section>

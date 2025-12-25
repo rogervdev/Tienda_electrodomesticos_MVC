@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Panel de Administración";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="container py-5">
+    <h2 class="text-center text-primary fw-bold mb-5">Panel de Administración</h2>
+
+    <div class="row justify-content-center g-4">
+
+        <!-- Agregar Producto -->
+        <div class="col-10 col-sm-6 col-md-4 col-lg-3">
+            <a asp-action="AgregarProducto" asp-controller="Admin" class="text-decoration-none text-dark">
+                <div class="card shadow-sm border-0 text-center p-4 bg-body-tertiary h-100">
+                    <div class="mb-3 text-primary"><i class="fa-solid fa-box-open fa-3x"></i></div>
+                    <h5 class="fw-semibold">Agregar Producto</h5>
+                    <p class="small text-secondary mb-0">Añade nuevos artículos al catálogo</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Agregar Categoría -->
+        <div class="col-10 col-sm-6 col-md-4 col-lg-3">
+            <a asp-action="Categorias" asp-controller="Admin" class="text-decoration-none text-dark">
+                <div class="card shadow-sm border-0 text-center p-4 bg-body-tertiary h-100">
+                    <div class="mb-3 text-success"><i class="fa-solid fa-tags fa-3x"></i></div>
+                    <h5 class="fw-semibold">Agregar Categoría</h5>
+                    <p class="small text-secondary mb-0">Crea o gestiona categorías de productos</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Ver Productos -->
+        <div class="col-10 col-sm-6 col-md-4 col-lg-3">
+            <a asp-action="Productos" asp-controller="Admin" class="text-decoration-none text-dark">
+                <div class="card shadow-sm border-0 text-center p-4 bg-body-tertiary h-100">
+                    <div class="mb-3 text-info"><i class="fa-solid fa-eye fa-3x"></i></div>
+                    <h5 class="fw-semibold">Ver Productos</h5>
+                    <p class="small text-secondary mb-0">Consulta la lista completa de productos</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Usuarios -->
+        <div class="col-10 col-sm-6 col-md-4 col-lg-3">
+            <a asp-action="Usuarios" asp-controller="Admin" class="text-decoration-none text-dark">
+                <div class="card shadow-sm border-0 text-center p-4 bg-body-tertiary h-100">
+                    <div class="mb-3 text-danger"><i class="fa-solid fa-users fa-3x"></i></div>
+                    <h5 class="fw-semibold">Usuarios</h5>
+                    <p class="small text-secondary mb-0">Administra cuentas y permisos de clientes</p>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</section>

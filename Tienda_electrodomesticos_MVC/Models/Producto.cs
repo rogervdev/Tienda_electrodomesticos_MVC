@@ -21,5 +21,8 @@
         public decimal? PrecioConDescuento { get; set; }
 
         public bool IsActive { get; set; }
+
+        // NUEVO: para mostrar el nombre de la categoría
+        public string CategoriaNombre { get; set; } = string.Empty;
     }
 }

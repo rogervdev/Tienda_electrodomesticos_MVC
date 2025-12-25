@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http;
 using Tienda_electrodomesticos_MVC.Models;
+using Tienda_electrodomesticos_MVC.Models.ViewModels;
+
 
 namespace Tienda_electrodomesticos_MVC.Services
 {
@@ -41,22 +43,27 @@ namespace Tienda_electrodomesticos_MVC.Services
         }
 
         // POST: api/categoria
-        public async Task<Categoria> GuardarCategoria(Categoria categoria)
+        // POST: api/categoria con imagen
+        public async Task<Categoria> GuardarCategoria(MultipartFormDataContent formData)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/categoria", categoria);
+            var response = await _httpClient.PostAsync("api/categoria", formData);
+            response.EnsureSuccessStatusCode();
+
+            var apiResponse = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Categoria>(apiResponse)!;
+        }
+
+
+
+        // PUT: api/categoria/{id}
+        public async Task<Categoria> ActualizarCategoria(int id, MultipartFormDataContent formData)
+        {
+            var response = await _httpClient.PutAsync($"api/categoria/{id}", formData);
             response.EnsureSuccessStatusCode();
             var apiResponse = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Categoria>(apiResponse)!;
         }
 
-        // PUT: api/categoria/{id}
-        public async Task<Categoria> ActualizarCategoria(int id, Categoria categoria)
-        {
-            var response = await _httpClient.PutAsJsonAsync($"api/categoria/{id}", categoria);
-            response.EnsureSuccessStatusCode();
-            var apiResponse = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Categoria>(apiResponse)!;
-        }
 
         // DELETE: api/categoria/{id}
         public async Task<bool> EliminarCategoria(int id)

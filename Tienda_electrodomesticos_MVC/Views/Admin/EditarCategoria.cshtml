@@ -1,0 +1,137 @@
+﻿@model Tienda_electrodomesticos_MVC.Models.Categoria
+@inject IConfiguration Configuration
+
+@{
+    ViewData["Title"] = "Editar Categoría";
+    var api = Configuration["ApiBaseUrl"];
+}
+
+<section>
+    <div class="container-fluid py-5 mt-4">
+        <div class="row justify-content-center g-4">
+
+            <div class="col-md-5">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                    <!-- Header -->
+                    <div class="card-header bg-primary text-white text-center py-3 rounded-top">
+                        <h4 class="fw-semibold mb-0">
+                            <i class="fa-solid fa-folder-pen me-2"></i> Editar Categoría
+                        </h4>
+                    </div>
+
+                    <!-- Mensajes -->
+                    <div class="px-3 pt-3">
+                        @if (TempData["successMsg"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>@TempData["successMsg"]</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+                        @if (TempData["errorMsg"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>@TempData["errorMsg"]</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Body -->
+                    <div class="card-body p-4">
+                        <form asp-controller="Admin"
+                              asp-action="ActualizarCategoria"
+                              method="post"
+                              enctype="multipart/form-data">
+
+                            <input type="hidden" name="Id" value="@Model.Id" />
+
+                            <!-- Nombre -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Nombre de categoría</label>
+                                <input type="text"
+                                       name="Nombre"
+                                       class="form-control"
+                                       value="@Model.Nombre"
+                                       required />
+                            </div>
+
+                            <!-- Estado -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold d-block mb-2">Estado</label>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="IsActive"
+                                           value="true"
+                                           @(Model.IsActive ? "checked" : "") />
+                                    <label class="form-check-label">Activo</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="IsActive"
+                                           value="false"
+                                           @(!Model.IsActive ? "checked" : "") />
+                                    <label class="form-check-label">Inactivo</label>
+                                </div>
+                            </div>
+
+                            <!-- Imagen -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Cambiar Imagen</label>
+                                <input type="file"
+                                       name="File"
+                                       id="fileInput"
+                                       class="form-control"
+                                       accept="image/*" />
+                            </div>
+
+                            <!-- Preview -->
+                            <div class="mb-4 text-center">
+                                <img id="preview"
+                                     src="@($"{api}/images/category_img/{Model.ImagenNombre}")"
+                                     class="rounded-circle border"
+                                     style="width:100px;height:100px;object-fit:cover" />
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="d-flex justify-content-between">
+                                <a asp-controller="Admin"
+                                   asp-action="Categorias"
+                                   class="btn btn-secondary">
+                                    <i class="fa-solid fa-arrow-left me-2"></i> Regresar
+                                </a>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa-solid fa-circle-check me-2"></i> Guardar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+
+        fileInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => preview.src = e.target.result;
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

@@ -17,7 +17,7 @@ namespace Tienda_electrodomesticos_MVC.Services
         // GET: api/carrito/{usuarioId}
         public async Task<List<Carrito>> ObtenerCarritoPorUsuario(int usuarioId)
         {
-            var response = await _httpClient.GetAsync($"api/carrito/{usuarioId}");
+            var response = await _httpClient.GetAsync($"{usuarioId}"); // solo el id
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
@@ -42,7 +42,7 @@ namespace Tienda_electrodomesticos_MVC.Services
         // GET: api/carrito/contar/{usuarioId}
         public async Task<int> ContarCarrito(int usuarioId)
         {
-            var response = await _httpClient.GetAsync($"api/carrito/contar/{usuarioId}");
+            var response = await _httpClient.GetAsync($"contar/{usuarioId}");
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();

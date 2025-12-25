@@ -2,6 +2,15 @@ using Tienda_electrodomesticos_MVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDistributedMemoryCache(); // Cache en memoria para sesión
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Tiempo de expiración de la sesión
+    options.Cookie.HttpOnly = true; // Más seguro
+    options.Cookie.IsEssential = true; // Necesario si usas GDPR
+});
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -25,6 +34,12 @@ builder.Services.AddHttpClient<CarritoApiService>(client =>
     client.BaseAddress = new Uri("https://localhost:7008/"); // tu API
 });
 
+builder.Services.AddHttpClient("api", c =>
+{
+    c.BaseAddress = new Uri("https://localhost:7008/api/"); // URL de tu API
+});
+
+
 
 
 var app = builder.Build();
@@ -41,7 +56,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -1,0 +1,123 @@
+﻿@model Tienda_electrodomesticos_MVC.Models.ViewModels.ProductoViewModel
+
+@{
+    ViewData["Title"] = "Agregar Producto";
+}
+
+<section>
+    <div class="container py-5 mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card card-sh border-0 rounded-4">
+
+                    <!-- Header -->
+                    <div class="card-header bg-primary text-white text-center py-3 rounded-top">
+                        <h4 class="mb-0 fw-semibold">
+                            <i class="fa-solid fa-square-plus me-2"></i>Agregar Producto
+                        </h4>
+
+                        @if (TempData["SuccessMsg"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show mt-3 mb-0" role="alert">
+                                <strong>@TempData["SuccessMsg"]</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                            </div>
+                        }
+                        @if (TempData["ErrorMsg"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show mt-3 mb-0" role="alert">
+                                <strong>@TempData["ErrorMsg"]</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="card-body p-4">
+                        <form asp-action="GuardarProducto" asp-controller="Admin" method="post" enctype="multipart/form-data">
+
+                            <!-- Título -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Título</label>
+                                <input asp-for="Titulo" class="form-control" placeholder="Ej: Laptop HP Pavilion 15" required />
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Descripción</label>
+                                <textarea asp-for="Descripcion" class="form-control" rows="3" placeholder="Breve descripción" required></textarea>
+                            </div>
+
+                            <!-- Categoría -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Categoría</label>
+                                <select asp-for="CategoriaId" class="form-select" required>
+                                    <option value="">Selecciona una categoría</option>
+                                    @foreach (var c in Model.Categorias)
+                                    {
+                                        <option value="@c.Id">@c.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <!-- Estado -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold d-block mb-2">Estado</label>
+                                <div class="form-check form-check-inline">
+                                    <input asp-for="IsActive" class="form-check-input" type="radio" value="true" checked />
+                                    <label class="form-check-label">Activo</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input asp-for="IsActive" class="form-check-input" type="radio" value="false" />
+                                    <label class="form-check-label">Inactivo</label>
+                                </div>
+                            </div>
+
+                            <!-- Precio, Descuento y Precio con descuento -->
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold">Precio (S/)</label>
+                                    <input asp-for="Precio" type="number" step="0.01" class="form-control" placeholder="Ej: 899.90" required />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold">Descuento %</label>
+                                    <input asp-for="Descuento" type="number" step="1" class="form-control" placeholder="Ej: 10" />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-semibold">Precio con descuento</label>
+                                    <input asp-for="PrecioConDescuento" type="number" class="form-control" readonly />
+                                </div>
+                            </div>
+
+                            <!-- Stock -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Stock</label>
+                                <input asp-for="Stock" type="number" class="form-control" placeholder="Cantidad disponible" required />
+                            </div>
+
+                            <!-- Imagen -->
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Imagen del producto</label>
+                                <input asp-for="File" type="file" class="form-control" accept="image/*" required />
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="d-flex justify-content-between gap-2">
+                                <a asp-action="Index" asp-controller="Admin" class="btn btn-secondary flex-grow-1">
+                                    <i class="fa-solid fa-arrow-left me-2"></i> Regresar
+                                </a>
+                                <a asp-action="Productos" asp-controller="Admin" class="btn btn-info flex-grow-1">
+                                    <i class="fa-solid fa-eye me-2"></i> Ver Productos
+                                </a>
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="fa-solid fa-circle-check me-2"></i> Guardar Producto
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
