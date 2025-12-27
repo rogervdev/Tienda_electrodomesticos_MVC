@@ -7,7 +7,7 @@
     var categoria = ViewData["CategoriaSeleccionada"] as string ?? "";
 }
 
-<section class="py-5">
+<section>
     <!-- 🔍 Barra de búsqueda -->
     <div class="container-fluid bg-primary py-4 mb-5">
         <div class="row justify-content-center">
@@ -98,8 +98,9 @@
                                                         <br />
                                                     }
                                                     <span class="fw-bold text-success fs-5">
-                                                        s/@p.PrecioConDescuento
+                                                        S/. @(p.PrecioConDescuento.HasValue? p.PrecioConDescuento.Value.ToString("F2") : "0.00")
                                                     </span>
+
                                                 </p>
                                                 <a asp-action="Detalle" asp-route-id="@p.Id"
                                                    class="btn btn-outline-primary w-100 fw-semibold">

@@ -24,6 +24,16 @@ namespace Tienda_electrodomesticos_MVC.Services
             return JsonConvert.DeserializeObject<List<Categoria>>(apiResponse)!;
         }
 
+        public async Task<List<Categoria>> GetAllCategoriasTodas()
+        {
+            var response = await _httpClient.GetAsync("api/categoria/todas");
+            response.EnsureSuccessStatusCode();
+
+            var apiResponse = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<Categoria>>(apiResponse)!;
+        }
+
+
         // GET: api/categoria/activos
         public async Task<List<Categoria>> GetAllActiveCategorias()
         {

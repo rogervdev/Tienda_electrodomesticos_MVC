@@ -4,7 +4,9 @@
 @{
     ViewData["Title"] = "Detalle de Producto";
     var api = Configuration["ApiBaseUrl"];
+    var usuarioId = Context.Session.GetString("UsuarioId");
 }
+
 
 <section class="py-5">
     <div class="container">
@@ -75,7 +77,10 @@
                     <!-- Precios -->
                     <div class="bg-light rounded-3 p-3 mb-4">
                         <div class="d-flex align-items-baseline mb-1">
-                            <span class="fs-4 fw-bold text-success me-2">S/@Model.PrecioConDescuento</span>
+                            <span class="fs-4 fw-bold text-success me-2">
+                                S/. @( (Model.PrecioConDescuento ?? 0m).ToString("F2") )
+                            </span>
+
                             <span class="text-body-secondary text-decoration-line-through">S/@Model.Precio</span>
                         </div>
                         <small class="text-muted">Descuento aplicado: @Model.Descuento%</small>
@@ -85,9 +90,18 @@
                     <div class="d-flex flex-wrap gap-3">
                         @if (Model.Stock > 0)
                         {
-                            <a asp-controller="Usuario" asp-action="AddCart" asp-route-pid="@Model.Id"
-                               class="btn btn-danger px-4 py-2 fw-medium">
-                                <i class="fas fa-cart-plus me-2"></i> Agregar al carrito
+                            <form asp-controller="Carrito" asp-action="Agregar" method="post">
+                                <input type="hidden" name="productoId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-danger px-4 py-2 fw-medium">
+                                    <i class="fas fa-cart-plus me-2"></i> Agregar al carrito
+                                </button>
+                            </form>
+                        }
+
+                        else if (usuarioId == null)
+                        {
+                            <a asp-controller="Cuenta" asp-action="Login" class="btn btn-warning px-4 py-2 fw-medium">
+                                <i class="fas fa-right-to-bracket me-2"></i> Inicia sesión para comprar
                             </a>
                         }
                         else

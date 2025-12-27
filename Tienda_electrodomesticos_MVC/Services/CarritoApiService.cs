@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System.Net.Http;
 using System.Net.Http.Json;
 using Tienda_electrodomesticos_MVC.Models;
+using Tienda_electrodomesticos_MVC.Models.DTOs;
 
 namespace Tienda_electrodomesticos_MVC.Services
 {
@@ -17,7 +17,7 @@ namespace Tienda_electrodomesticos_MVC.Services
         // GET: api/carrito/{usuarioId}
         public async Task<List<Carrito>> ObtenerCarritoPorUsuario(int usuarioId)
         {
-            var response = await _httpClient.GetAsync($"{usuarioId}"); // solo el id
+            var response = await _httpClient.GetAsync($"api/carrito/{usuarioId}");
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
@@ -27,7 +27,7 @@ namespace Tienda_electrodomesticos_MVC.Services
         // POST: api/carrito
         public async Task<Carrito> AgregarAlCarrito(int usuarioId, int productoId)
         {
-            var dto = new
+            var dto = new CarritoRequestDto
             {
                 UsuarioId = usuarioId,
                 ProductoId = productoId
@@ -36,17 +36,40 @@ namespace Tienda_electrodomesticos_MVC.Services
             var response = await _httpClient.PostAsJsonAsync("api/carrito", dto);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<Carrito>();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Carrito>(json)!;
         }
 
         // GET: api/carrito/contar/{usuarioId}
         public async Task<int> ContarCarrito(int usuarioId)
         {
-            var response = await _httpClient.GetAsync($"contar/{usuarioId}");
+            var response = await _httpClient.GetAsync($"api/carrito/contar/{usuarioId}");
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<int>(json);
+            return JsonConvert.DeserializeObject<int>(json)!;
         }
+
+        // DELETE: api/carrito/{usuarioId}/{productoId}
+        public async Task<bool> EliminarProducto(int usuarioId, int productoId)
+        {
+            var response = await _httpClient.DeleteAsync($"api/carrito/{usuarioId}/{productoId}");
+            return response.IsSuccessStatusCode;
+        }
+
+        // PUT: api/carrito/aumentar/{usuarioId}/{productoId}
+        public async Task<bool> AumentarCantidad(int usuarioId, int productoId)
+        {
+            var response = await _httpClient.PutAsync($"api/carrito/aumentar/{usuarioId}/{productoId}", null);
+            return response.IsSuccessStatusCode;
+        }
+
+        // PUT: api/carrito/disminuir/{usuarioId}/{productoId}
+        public async Task<bool> DisminuirCantidad(int usuarioId, int productoId)
+        {
+            var response = await _httpClient.PutAsync($"api/carrito/disminuir/{usuarioId}/{productoId}", null);
+            return response.IsSuccessStatusCode;
+        }
+
     }
 }

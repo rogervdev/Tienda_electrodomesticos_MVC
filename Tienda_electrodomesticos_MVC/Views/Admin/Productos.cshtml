@@ -57,7 +57,7 @@
                                     <td class="text-center">@p.CategoriaNombre</td>
                                     <td class="text-end">S/ @p.Precio</td>
                                     <td class="text-end">@p.Descuento %</td>
-                                    <td class="text-end">S/ @p.PrecioConDescuento</td>
+                                    <td class="text-end">@p.PrecioConDescuento.GetValueOrDefault().ToString("C2")</td>
                                     <td class="text-center">
                                         <span class="badge @(p.IsActive ? "bg-success" : "bg-danger")">
                                             @(p.IsActive ? "Activo" : "Inactivo")

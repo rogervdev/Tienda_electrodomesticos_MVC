@@ -7,6 +7,7 @@ using Tienda_electrodomesticos_MVC.Services;
 
 namespace Tienda_electrodomesticos_MVC.Controllers
 {
+    [AdminAuthorize]
     public class AdminController : Controller
     {
         private readonly UsuarioApiService _usuarioService;
@@ -48,9 +49,10 @@ namespace Tienda_electrodomesticos_MVC.Controllers
         // Listado de categorías
         public async Task<IActionResult> Categorias()
         {
-            var categorias = await _categoriaService.GetAllCategorias();
+            var categorias = await _categoriaService.GetAllCategoriasTodas();
             return View(categorias);
         }
+
 
         // Vista de edición
         [HttpGet]

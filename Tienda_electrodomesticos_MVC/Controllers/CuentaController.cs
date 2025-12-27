@@ -32,14 +32,23 @@ namespace Tienda_electrodomesticos_MVC.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var usuario = await response.Content.ReadFromJsonAsync<Usuario>();
+
+                    // Guardar en sesión
                     HttpContext.Session.SetString("UsuarioId", usuario!.Id.ToString());
                     HttpContext.Session.SetString("UsuarioEmail", usuario.Email);
+                    HttpContext.Session.SetString("UsuarioNombre", usuario.Nombre);
+                    HttpContext.Session.SetString("UsuarioRol", usuario.Rol);
+
                     TempData["Success"] = "Bienvenido " + usuario.Email;
-                    return RedirectToAction("Index", "Home");
+
+                    // Redirigir según rol
+                    if (usuario.Rol.ToUpper() == "ROLE_ADMIN")
+                        return RedirectToAction("Index", "Admin"); // panel admin
+                    else
+                        return RedirectToAction("Index", "Home");  // usuario normal
                 }
                 else
                 {
-                    // Leer el mensaje que devuelve la API
                     var mensaje = await response.Content.ReadAsStringAsync();
                     TempData["Error"] = mensaje;
                     return View(model);
@@ -51,6 +60,7 @@ namespace Tienda_electrodomesticos_MVC.Controllers
                 return View(model);
             }
         }
+
 
 
         public IActionResult Logout()

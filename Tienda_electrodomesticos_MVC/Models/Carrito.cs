@@ -9,6 +9,7 @@
         public int ProductoId { get; set; }
 
         public int Cantidad { get; set; }
+        public double Precio { get; set; }
 
         // 🔹 Datos calculados que vienen desde la API
         public double PrecioTotal { get; set; }
